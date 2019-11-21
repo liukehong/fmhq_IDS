@@ -37,13 +37,6 @@
                     type="success"
                   >{{ $t('product_manage.select') }}</el-button>
                 </div>
-                <!-- 查看历史回顾 -->
-                <!-- <div class="btn_wrap">
-                  <el-button
-                    style="width: 80%;"
-                    @click="fnHistory(item)"
-                  >{{ $t('product_manage.look_profit') }}</el-button>
-                </div>-->
                 <div class="btn_wrap">
                   <el-button
                     style="width: 80%;"
@@ -89,8 +82,8 @@ export default {
   },
   data() {
     return {
+      dept: "",
       pageType: "index",
-      curSelect: "",
       money: "",
       dialogVisible: false,
       dialogVisible1: false,
@@ -129,60 +122,15 @@ export default {
   mounted() {
     let vm = this;
     vm.fnTypeList();
-    vm.fnGetProduct();
   },
   methods: {
     // 根据dept配置不同的选项
     fnTypeList() {
       let vm = this;
-      let dept = 11;
       if (!!window.localStorage.getItem("userInfo")) {
-        // dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
+        vm.dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
       }
-      if (dept == 21) {
-        vm.productList = [
-          // 利用系统基础面与技术面大数据进行线性分析处理，效率最高，执行最快，持单周期最短，适合初级理财人士。
-          {
-            name: "Deep AI Genius 1",
-            list: [],
-            icon: "",
-            max: "",
-            min: "",
-            text: this.$t("product_manage.introduce.basic")
-          },
-          // 交易范围进一步拓宽，同时执行多项策略，允许小单亏损大单盈利的判断并开始具备高频测试空单并交易实单的能力，适合中级资产客户。
-          {
-            name: "Deep AI Genius 2",
-            list: [],
-            icon: "",
-            max: "",
-            min: "",
-            text: this.$t("product_manage.introduce.pro")
-          },
-          // 拥有自主学习能力及自主防御系统，使用迭代升级及迭代策略分析并分布式执行，智能化进一步提高，适合高级客户或长期持有数字资产的客户。
-          {
-            name: "Deep AI Genius 3",
-            list: [],
-            icon: "",
-            max: "",
-            min: "",
-            text: this.$t("product_manage.introduce.genius")
-          }
-        ];
-      }
-    },
-    // 查看历史回顾
-    fnHistory(data) {
-      let vm = this;
-      vm.curSelect =
-        data.name == "Deep AI Genius 1"
-          ? "basic"
-          : data.name == "Deep AI Genius 2"
-          ? "pro"
-          : data.name == "Deep AI Genius 3"
-          ? "genius"
-          : "junior";
-      vm.pageType = "history";
+      vm.fnGetProduct();
     },
     // 获取配套产品
     fnGetProduct: function() {
@@ -196,7 +144,18 @@ export default {
               if (item.name == jtem.name) {
                 item.list.push(jtem);
                 if (!!!item.icon) {
-                  item.icon = jtem.icon;
+                  if (vm.dept == 21) {
+                    if (item.name == "Deep AI Genius 2") {
+                      item.icon = "../../../../../static/image/A.png";
+                      item.name = "Deep AI Genius A";
+                    }
+                    if (item.name == "Deep AI Genius 3") {
+                      item.icon = "../../../../../static/image/B.png";
+                      item.name = "Deep AI Genius B";
+                    }
+                  } else {
+                    item.icon = jtem.icon;
+                  }
                   item.max = jtem.max;
                   item.min = jtem.min;
                 }
