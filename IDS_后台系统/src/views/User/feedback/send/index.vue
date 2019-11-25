@@ -97,6 +97,10 @@ export default {
     submitForm(formName) {
       let vm = this;
       let params;
+      if(vm.ruleForm.content.length>1500){
+        vm.fnOpenMessageBox(vm.$t('other.text4'), "error");
+        return false;
+      }
       vm.myValidate(formName).then(err => {
         if (!!!err) {
           params = Object.assign({}, vm.ruleForm);

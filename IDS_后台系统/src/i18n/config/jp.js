@@ -1168,7 +1168,8 @@ const jp = {
   other: {
     text1: '支払いチャネル',
     text2: 'チャネル1',
-    text3: 'チャネル2'
+    text3: 'チャネル2',
+    text4: '1500文字を超えてはいけません。'
   }
 };
 export default jp;

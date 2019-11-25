@@ -1157,7 +1157,8 @@ const en = {
     other: {
         text1: 'Payment Channel',
         text2: 'Channel 1',
-        text3: 'Channel 2'
+        text3: 'Channel 2',
+        text4: "Can't Exceed 1500 Characters!"
       }
 };
 export default en;

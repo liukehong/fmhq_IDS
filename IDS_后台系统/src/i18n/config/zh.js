@@ -1174,7 +1174,8 @@ const zh = {
   other: {
     text1: '支付通道',
     text2: '通道1',
-    text3: '通道2'
+    text3: '通道2',
+    text4: '不能超过1500个字符！'
   }
 };
 export default zh;

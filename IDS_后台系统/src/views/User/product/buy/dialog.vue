@@ -1,8 +1,15 @@
 <template>
-<!-- 选择配套 -->
-  <el-dialog :modal-append-to-body='false' class="productList" :title="$t('product_manage.sel_product')" :visible.sync="p.dialogVisible" center :width="screenSize == 1?'40%':'90%'">
+  <!-- 选择配套 -->
+  <el-dialog
+    :modal-append-to-body="false"
+    class="productList"
+    :title="$t('product_manage.sel_product')"
+    :visible.sync="p.dialogVisible"
+    center
+    :width="screenSize == 1?'40%':'90%'"
+  >
     <div class="pro_msg">
-      <img :src="p.list.icon" alt>
+      <img :src="p.list.icon" alt />
       <div class="pro_text">
         <!-- 预期月回报能力 -->
         <p
@@ -12,13 +19,19 @@
       </div>
     </div>
     <ul class="pop_pro_lsit">
-      <li class="pop_pro_item" v-for="item in p.list.list" :key="item.id">
-        <div class="pro_txt">
-          <p class="pro_tit">IDS{{ item.money }}</p>
-          <!-- 立即购买 -->
-          <el-button @click="fnGoBuy(item)" class="btn" type="success">{{ $t('product_manage.buy_btn') }}</el-button>
-        </div>
-      </li>
+      <div v-for="item in p.list.list" :key="item.id">
+        <li v-if="fnDoSome(item)" class="pop_pro_item">
+          <div class="pro_txt">
+            <p class="pro_tit">IDS{{ item.money }}</p>
+            <!-- 立即购买 -->
+            <el-button
+              @click="fnGoBuy(item)"
+              class="btn"
+              type="success"
+            >{{ $t('product_manage.buy_btn') }}</el-button>
+          </div>
+        </li>
+      </div>
     </ul>
   </el-dialog>
 </template>
@@ -35,6 +48,19 @@ export default {
     let vm = this;
   },
   methods: {
+    fnDoSome: function (data){
+      let vm = this;
+      return true
+      /* if(data.money == 5000||data.money == 20000){
+        return true
+      }else{
+        if(vm.screenSize == 1){
+          return false
+        }else{
+          return true
+        }
+      } */
+    },
     fnGoBuy: function(data) {
       let vm = this;
       vm.$router.push({ name: "product_manage", params: { item: data } });
@@ -85,7 +111,7 @@ export default {
         flex: 1;
         text-align: center;
         .pro_tit {
-        //   color: #00296b;
+          //   color: #00296b;
           font-size: 0.18rem;
         }
         .btn {

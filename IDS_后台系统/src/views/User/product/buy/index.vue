@@ -21,7 +21,7 @@
                 <div class="box_img">
                   <img :src="item.icon" alt />
                 </div>
-                <div class="box_title">{{ item.name }}</div>
+                <div class="box_title">{{ changeName(item.name) }}</div>
                 <div class="box_text">
                   <p>{{ item.text }}</p>
                 </div>
@@ -124,6 +124,18 @@ export default {
     vm.fnTypeList();
   },
   methods: {
+    changeName (data) {
+      let vm = this;
+      if(vm.dept == 21){
+        if(data == 'Deep AI Genius 2'){
+          return 'Deep AI Genius A';
+        }else{
+          return 'Deep AI Genius B';
+        }
+      }else{
+        return data;
+      }
+    },
     // 根据dept配置不同的选项
     fnTypeList() {
       let vm = this;
@@ -147,11 +159,11 @@ export default {
                   if (vm.dept == 21) {
                     if (item.name == "Deep AI Genius 2") {
                       item.icon = "../../../../../static/image/A.png";
-                      item.name = "Deep AI Genius A";
+                      // item.name = "Deep AI Genius A";
                     }
                     if (item.name == "Deep AI Genius 3") {
                       item.icon = "../../../../../static/image/B.png";
-                      item.name = "Deep AI Genius B";
+                      // item.name = "Deep AI Genius B";
                     }
                   } else {
                     item.icon = jtem.icon;
