@@ -761,6 +761,7 @@ const jp = {
     text1: 'デジタル通貨の種類を選択してください',
     payment: "お支払い方法",
     input_num: "ドルの金額を選んでください",
+    input_num1: "ドルの金額を選んでください",
     buy_num: '購入数量',
     real_num: "購入数量",
     now_usd_rate: "現在の米ドルの為替レートは",
@@ -1164,5 +1165,10 @@ const jp = {
     status3: '処理しない',
     text14: '処理が成功した',
   },
+  other: {
+    text1: '支払いチャネル',
+    text2: 'チャネル1',
+    text3: 'チャネル2'
+  }
 };
 export default jp;

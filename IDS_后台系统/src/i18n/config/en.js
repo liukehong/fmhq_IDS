@@ -765,6 +765,7 @@ const en = {
         text1: 'Please Select Type Of Cryptocurrency',
         payment: "Payment Mode",
         input_num: "Select Amount",
+        input_num1: "Select Amount",
         buy_num: 'Purchase Quantity',
         real_num: "Purchase Quantity",
         now_usd_rate: "Current Exchange Rate",
@@ -1153,5 +1154,10 @@ const en = {
         status3: 'No disposal',
         text14: 'Handling Success',
     },
+    other: {
+        text1: 'Payment Channel',
+        text2: 'Channel 1',
+        text3: 'Channel 2'
+      }
 };
 export default en;

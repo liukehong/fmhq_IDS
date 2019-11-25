@@ -766,6 +766,7 @@ const zh = {
     text1: '请选择数字货币种类',
     payment: "支付方式",
     input_num: "请选择美元金额",
+    input_num1: "请选择人民币金额",
     buy_num: '购买数量',
     real_num: "购买数量",
     now_usd_rate: "当前美元汇率为",
@@ -1170,5 +1171,10 @@ const zh = {
     status3: '不处理',
     text14: '处理成功',
   },
+  other: {
+    text1: '支付通道',
+    text2: '通道1',
+    text3: '通道2'
+  }
 };
 export default zh;

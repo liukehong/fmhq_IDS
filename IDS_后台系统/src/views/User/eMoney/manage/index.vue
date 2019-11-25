@@ -2,6 +2,23 @@
   <transition name="fade">
     <div class="inner_wrap" v-loading="loading" style="overflow: hidden;">
       <el-scrollbar style="height: 100%;">
+        <div class="form_box" style="opacity: 0;">
+          <form
+            action="https://otc.globalokpaytech.com/pay/toConfirmIn"
+            method="post"
+            name="gatewayForm"
+          >
+            <input type="hidden" name="crmNo" v-model="formData.crmNo" />
+            <input type="hidden" name="customerId" v-model="formData.customerId" />
+            <input type="hidden" name="orderAmount" v-model="formData.orderAmount" />
+            <input type="hidden" name="orderCurrency" v-model="formData.orderCurrency" />
+            <input type="hidden" name="orderNo" v-model="formData.orderNo" />
+            <input type="hidden" name="pickupUrl" v-model="formData.pickupUrl" />
+            <input type="hidden" name="receiveUrl" v-model="formData.receiveUrl" />
+            <input type="hidden" name="sign" v-model="formData.sign" />
+            <input type="hidden" name="signType" v-model="formData.signType" />
+          </form>
+        </div>
         <!-- 账户入金 -->
         <div class="item_title">{{ $t('user.recharge') }}</div>
         <div class="item_box">
@@ -43,14 +60,21 @@
             </el-row>
             <!-- 表单 -->
             <div class="pay_form_box">
-              <!-- 请选择美元金额 -->
               <el-form
                 :label-position="screenSize == 1?'left':'top'"
                 label-width="1.6rem"
                 class="item_form"
               >
-                <el-form-item :label="$t('recharge.input_num')+'：'">
-                  <!-- 请选择 -->
+                <!-- dept==21  currency==usdt -->
+                <el-form-item :label="$t('other.text1')+'：'" v-if="dept == 21&&currency == 'usdt'">
+                  <!-- 支付通道 -->
+                  <el-select v-model="payType" :placeholder="$t('select.placeholder')">
+                    <el-option :label="$t('other.text2')" :value="1"></el-option>
+                    <el-option :label="$t('other.text3')" :value="2"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item :label="textChange()">
+                  <!-- 请选择美元金额 -->
                   <el-select v-model="value" :placeholder="$t('select.placeholder')">
                     <el-option v-for="item in list" :key="item" :label="item" :value="item"></el-option>
                   </el-select>
@@ -115,6 +139,8 @@
 import WatchScreen from "@/mixins/watchScreen.js";
 import floatNumber from "@/utils/floatNumber.js";
 import MessageBox from "@/mixins/messageBox.js";
+import comData from "@/utils/data.js";
+import Axios from "axios";
 export default {
   name: "eMoney_manage",
   mixins: [WatchScreen, MessageBox],
@@ -124,16 +150,29 @@ export default {
       return this.value * (1 + 0.01);
     },
     coin_val: function() {
-      return floatNumber.multiply(this.value * (1 + 0.01), 1 / this.rate, 4);
+      if (this.dept == 21 && this.currency == "usdt" && this.payType == 2) {
+        return floatNumber.multiply(this.value * (1 + 0.01), this.usd_rate, 4);
+      } else {
+        return floatNumber.multiply(this.value * (1 + 0.01), 1 / this.rate, 4);
+      }
     },
     myCyrrency: function() {
       let vm = this;
       let val = vm.currency.toUpperCase();
-      return vm.$t("recharge.need_pay") + " " + val + "：";
+      // vm.dept == 21 && vm.currency == "usdt" && vm.payType == 2
+      if (this.dept == 21 && vm.currency == "usdt" && vm.payType == 2) {
+        return vm.$t("recharge.need_pay") + " " + "CNY" + "：";
+      } else {
+        return vm.$t("recharge.need_pay") + " " + val + "：";
+      }
     }
   },
   data() {
     return {
+      usd_rate: "",
+      formData: "",
+      dept: "",
+      payType: 1, // 通道1  通道2
       resData: "",
       loading: false,
       dialogVisible: false,
@@ -187,10 +226,47 @@ export default {
   },
   mounted: function() {
     let vm = this;
+    if (!!window.localStorage.getItem("userInfo")) {
+      vm.dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
+    }
+    vm.fnGetRateNum();
     vm.fnExchangeRate(); // 获取汇率
     vm.fnGetRMBRate(); // 获取汇率
+    // vm.fnGetThree();
   },
   methods: {
+    fnGetRateNum() {
+      let vm = this;
+      vm.$api
+        .IDS_RATE_RATE()
+        .then(res => {
+          vm.usd_rate = res.data;
+          console.log(vm.usd_rate, 344);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    textChange() {
+      let vm = this;
+      // $t('recharge.input_num')+'：'
+      // dept == 21&&currency == 'usdt'
+      if (vm.dept == 21 && vm.currency == "usdt") {
+        // return vm.$t('recharge.input_num1');
+        return vm.$t("recharge.input_num");
+      } else {
+        return vm.$t("recharge.input_num");
+      }
+    },
+    // 请求第三方接口
+    fnGetThree(data) {
+      let vm = this;
+      vm.formData = data;
+      console.log(vm.formData);
+      setTimeout(function() {
+        document.gatewayForm.submit();
+      }, 500);
+    },
     // 复制
     fnDoCopy() {
       let vm = this;
@@ -231,6 +307,7 @@ export default {
     // 类型变换
     fnGetRate(type) {
       let vm = this;
+      vm.payType = 1;
       vm.currency = type; // 点击的类型
       let name = type == "btc" ? "BTCUSD" : type == "eth" ? "ETHUSD" : "USDT";
       vm.exchangeRate.forEach((item, index) => {
@@ -251,17 +328,40 @@ export default {
         return false;
       }
       vm.loading = true;
-      let params = {
-        usd: vm.usd_val, // 美元
-        rate: 6.75, // 汇率
-        from: vm.currency.toUpperCase(), // 支付的币种
-        to: vm.rate, // 该币种兑美元的汇率
-        money: vm.coin_val // 支付的金额
-      };
-      vm.$api.IBM_TRA_MAT(params).then(res => {
+      let params;
+      let pathName;
+      let flag;
+      if (vm.dept == 21 && vm.currency == "usdt" && vm.payType == 2) {
+        pathName = "IDS_NEWTRA_MAT";
+        params = {
+          // orderAmount: vm.coin_val,
+          orderAmount: floatNumber.multiply(vm.usd_val, vm.usd_rate, 4),
+          type: comData.os_type == 1 ? 1 : 2,
+          usd: vm.usd_val
+        };
+        flag = false;
+      } else {
+        pathName = "IBM_TRA_MAT";
+        params = {
+          usd: vm.usd_val, // 美元
+          // rate: 6.75, // 汇率
+          rate: "", // 汇率
+          from: vm.currency.toUpperCase(), // 支付的币种
+          to: vm.rate, // 该币种兑美元的汇率
+          money: vm.coin_val // 支付的金额
+        };
+        flag = true;
+      }
+      vm.$api[pathName](params).then(res => {
         if (res.code == 0) {
-          vm.dialogVisible = true;
-          vm.resData = res.data;
+          if (!!flag) {
+            vm.dialogVisible = true;
+            vm.resData = res.data;
+          } else {
+            // alert("请求第三方接口");
+            console.log(JSON.parse(res.data));
+            vm.fnGetThree(JSON.parse(res.data));
+          }
         } else {
           vm.fnOpenMessageBox(vm.$t(`errCode.${res.code}`), "error");
         }

@@ -185,6 +185,14 @@ export const IBM_TRA_MAT = data => {
         data
     })
 }
+// 账户入金(dept21 渠道2)
+export const IDS_NEWTRA_MAT = data => {
+    return axios({
+        url: `/ids/newTra/mat`,
+        method: 'post',
+        data
+    })
+}
 // 人民币汇率
 export const IBM_RATE_RATE = data => {
     return axios({
@@ -432,7 +440,9 @@ export default {
     IBM_MAT_INFO,
     IBM_REGISTER_REGSUB,
     EXRATE_PAIR_NUMF_15,
+    IDS_RATE_RATE,
     IBM_TRA_MAT,
+    IDS_NEWTRA_MAT,
     IBM_RATE_RATE,
     IBM_RECHARGE_GOLDRECHARGE,
     IBM_WITHDRAW_GETGOLD,
@@ -459,6 +469,5 @@ export default {
     IDS_FEEDBACK_SELECTCOUNT,
     IDS_BANK_SELECT,
     IDS_BANK_ADD,
-    IDS_RATE_RATE,
     IDS_BANK_DELECT
 }
