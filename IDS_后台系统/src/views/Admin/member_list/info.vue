@@ -333,6 +333,9 @@ export default {
             JSON.stringify(res.data.token)
           ); // 保存token
           window.sessionStorage.setItem("isLogin", "ok"); // 判断是否从登录页进来
+          if (res.data.dept == 31) {
+            res.data.dept = 21;
+          }
           window.localStorage.setItem("userInfo", JSON.stringify(res.data)); // 保存登录信息
           vm.$router.push({ path: comData.conutry_type + "/user/home" });
         } else {

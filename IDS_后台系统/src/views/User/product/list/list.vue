@@ -14,7 +14,9 @@
         <template slot-scope="scope">{{ scope.row.createTime|FMT_DATE }}</template>
       </el-table-column>
       <!-- 配套名 -->
-      <el-table-column width="150" :label="$t('product_setting.mat_name')" prop="matName"></el-table-column>
+      <el-table-column width="150" :label="$t('product_setting.mat_name')">
+        <template slot-scope="scope">{{ fnMatName(scope.row.matName) }}</template>
+      </el-table-column>
       <!-- 配套金额 -->
       <el-table-column prop="money" :label="$t('product_setting.mat_money')"></el-table-column>
       <!-- 预期月回报率 -->
@@ -54,7 +56,7 @@
             @click="fnOpenHetong(scope.row)"
             type="primary"
             size="mini"
-          >{{ $t('product_setting.read') }}</el-button> -->
+          >{{ $t('product_setting.read') }}</el-button>-->
           <!-- 刷新 -->
           <el-button
             @click="fnRefresh(scope.row)"
@@ -92,8 +94,7 @@
         :page-size="10"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
-      >
-      </el-pagination>
+      ></el-pagination>
     </div>
   </div>
 </template>
@@ -103,10 +104,11 @@ import floatNumber from "@/utils/floatNumber.js";
 import MessageBox from "@/mixins/messageBox.js";
 export default {
   name: "Product_list",
-  inject: ["p",'$main'],
-  mixins: [WatchScreen,MessageBox],
+  inject: ["p", "$main"],
+  mixins: [WatchScreen, MessageBox],
   data() {
     return {
+      dept: "",
       sizeList: [10, 15, 20, 25, 30],
       currentPage: 1,
       tableData: [],
@@ -121,9 +123,26 @@ export default {
   },
   mounted: function() {
     let vm = this;
+    if (!!window.localStorage.getItem("userInfo")) {
+      vm.dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
+    }
     vm.fnGetData();
   },
   methods: {
+    fnMatName(data) {
+      let vm = this;
+      if(vm.dept == 21){
+        if(data == 'Deep AI Genius 2'){
+          return 'Deep AI Genius A';
+        }else if(data == 'Deep AI Genius 3'){
+          return 'Deep AI Genius B';
+        }else{
+          return data
+        }
+      }else{
+        return data;
+      }
+    },
     // 每页要展示多少条
     fnSizeChange(val) {
       let vm = this;
@@ -158,7 +177,7 @@ export default {
         if (res.code == 0) {
           w.location.replace(res.data);
         } else {
-          vm.fnOpenMessageBox(vm.$t(`errCode.${res.code}`),'error')
+          vm.fnOpenMessageBox(vm.$t(`errCode.${res.code}`), "error");
         }
       });
     },
@@ -172,7 +191,7 @@ export default {
         if (res.code == 0) {
           vm.fnGetData();
         } else {
-          vm.fnOpenMessageBox(vm.$t(`errCode.${res.code}`),'error')
+          vm.fnOpenMessageBox(vm.$t(`errCode.${res.code}`), "error");
         }
       });
     },

@@ -57,7 +57,8 @@ export default {
       rules: {}
     };
   },
-  mounted: function() {},
+  mounted: function() {
+  },
   methods: {
     // 二级密码验证
     fnPassAgain() {

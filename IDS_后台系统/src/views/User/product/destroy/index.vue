@@ -26,7 +26,7 @@
               </el-table-column>
               <!-- 配套名 -->
               <el-table-column :label="$t('product_setting.mat_name')">
-                <template slot-scope="scope">{{ scope.row.name||'--' }}</template>
+                <template slot-scope="scope">{{ fnMatName(scope.row.name) }}</template>
               </el-table-column>
               <!-- 配套金额 -->
               <el-table-column :label="$t('product_setting.mat_money')">
@@ -81,6 +81,7 @@ export default {
   },
   data() {
     return {
+      dept: "",
       sizeList: [10, 15, 20, 25, 30],
       langType: "zh",
       currentPage: 1,
@@ -96,12 +97,29 @@ export default {
   },
   mounted: function() {
     let vm = this;
+    if (!!window.localStorage.getItem("userInfo")) {
+      vm.dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
+    }
     if (!!window.localStorage.getItem("locale")) {
       vm.langType = window.localStorage.getItem("locale");
     }
     vm.fnGetData();
   },
   methods: {
+    fnMatName(data) {
+      let vm = this;
+      if (vm.dept == 21) {
+        if (data == "Deep AI Genius 2") {
+          return "Deep AI Genius A";
+        } else if (data == "Deep AI Genius 3") {
+          return "Deep AI Genius B";
+        } else {
+          return data;
+        }
+      } else {
+        return data;
+      }
+    },
     // 每页要展示多少条
     fnSizeChange(val) {
       let vm = this;

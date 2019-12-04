@@ -63,13 +63,13 @@
             <div class="title line">{{ $t('home.user_info') }}</div>
             <div class="content userInfo-box">
               <div class="userInfo-img">
-                <img :src="userInfo.icon" alt />
+                <img :src="fnImgFilter(userInfo.icon)" alt />
               </div>
               <div class="line title1">IDS{{ userId }}</div>
               <p
                 style="padding-left: 10px; padding-right:5px;"
                 class="title2"
-              >{{ $t('home.congratulations') }}：{{ userInfo.levelName }}</p>
+              >{{ $t('home.congratulations') }}：{{ fnNameFilter(userInfo.levelName) }}</p>
             </div>
           </div>
         </el-col>
@@ -99,7 +99,12 @@
                     {{ $t('wallet.reg') }}
                   </p>
                   <p class="line">${{ rp|FORMATTED_NUMBER }}</p>
-                  <el-button @click="changeUrl('/user/wallet/rp')" class="btn_style" style="border-radius: 20px;" size="small">{{ $t('home.seeInfo') }}</el-button>
+                  <el-button
+                    @click="changeUrl('/user/wallet/rp')"
+                    class="btn_style"
+                    style="border-radius: 20px;"
+                    size="small"
+                  >{{ $t('home.seeInfo') }}</el-button>
                 </div>
               </div>
             </el-col>
@@ -121,7 +126,12 @@
                     {{ $t('wallet.ele') }}
                   </p>
                   <p class="line">${{ ap|FORMATTED_NUMBER }}</p>
-                  <el-button @click="changeUrl('/user/wallet/ele')" class="btn_style" style="border-radius: 20px;" size="small">{{ $t('home.seeInfo') }}</el-button>
+                  <el-button
+                    @click="changeUrl('/user/wallet/ele')"
+                    class="btn_style"
+                    style="border-radius: 20px;"
+                    size="small"
+                  >{{ $t('home.seeInfo') }}</el-button>
                 </div>
               </div>
             </el-col>
@@ -143,7 +153,12 @@
                     {{ $t('wallet.cash') }}
                   </p>
                   <p class="line">${{ cp|FORMATTED_NUMBER }}</p>
-                  <el-button @click="changeUrl('/user/wallet/cp')" style="border-radius: 20px;" size="small" class="btn_style">{{ $t('home.seeInfo') }}</el-button>
+                  <el-button
+                    @click="changeUrl('/user/wallet/cp')"
+                    style="border-radius: 20px;"
+                    size="small"
+                    class="btn_style"
+                  >{{ $t('home.seeInfo') }}</el-button>
                 </div>
               </div>
             </el-col>
@@ -249,6 +264,7 @@ export default {
   inject: ["$main"],
   data() {
     return {
+      dept: "",
       userInfo: "", // 用户信息
       ben: "", // 个人资料
       ap: "",
@@ -263,9 +279,52 @@ export default {
     EchartTow
   },
   mounted: function() {
-    this.fnInit();
+    let vm = this;
+    if (!!window.localStorage.getItem("userInfo")) {
+      vm.dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
+    }
+    vm.fnInit();
   },
   methods: {
+    // 名字过滤
+    fnNameFilter (data) {
+      let vm = this;
+      if(!!!data){
+        return '';
+      }
+      if(vm.dept == 21){
+        if(data == 'PIB'){
+          return 'PIB☆';
+        }else if(data == 'DIB'){
+          return 'PIB☆☆';
+        }else if(data == 'IIB'){
+          return 'PIB☆☆☆';
+        }else{
+          return data;
+        }
+      }else{
+        return data;
+      }
+    },
+    // 图片过滤
+    fnImgFilter(data) {
+      let vm = this;
+      if(!!!data){
+        return false;
+      }
+      if (vm.dept == 21) {
+        let arrs = data.split("/");
+        let type = arrs[arrs.length - 1];
+        let num = type.split(".")[0];
+        if(num == 3||num == 4||num == 5||num == 6||num == 7){
+          return `../../../../static/newImg/${num}.png`;
+        }else{
+          return data;
+        }
+      } else {
+        return data;
+      }
+    },
     changeUrl: function(url) {
       let vm = this;
       vm.$router.push(comData.conutry_type + url);
@@ -274,6 +333,7 @@ export default {
       let vm = this;
       // 获取用户基础信息
       vm.$api.IBM_UTILS_INFO().then(res => {
+        console.log(res.data, 2233);
         vm.userInfo = res.data;
         vm.ap = res.data.ap;
         vm.cp = res.data.cp;

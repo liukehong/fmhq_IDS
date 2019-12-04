@@ -9,7 +9,7 @@
     >
       <!-- 配套名 -->
       <el-form-item :label="$t('product_setting.mat_name')">
-        <div>{{ p.item.matName }}</div>
+        <div>{{ fnMatName(p.item.matName) }}</div>
       </el-form-item>
       <!-- 配套金额 -->
       <el-form-item :label="$t('product_setting.mat_money')">
@@ -64,6 +64,7 @@ export default {
   },
   data() {
     return {
+      dept: '',
       user: {
         mobile: "" // 手机号
       },
@@ -75,9 +76,26 @@ export default {
   },
   mounted: function() {
     let vm = this;
+    if (!!window.localStorage.getItem("userInfo")) {
+      vm.dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
+    }
     vm.fnInit();
   },
   methods: {
+    fnMatName(data) {
+      let vm = this;
+      if (vm.dept == 21) {
+        if (data == "Deep AI Genius 2") {
+          return "Deep AI Genius A";
+        } else if (data == "Deep AI Genius 3") {
+          return "Deep AI Genius B";
+        } else {
+          return data;
+        }
+      } else {
+        return data;
+      }
+    },
     fnInit() {
       let vm = this;
       // 获取基本信息

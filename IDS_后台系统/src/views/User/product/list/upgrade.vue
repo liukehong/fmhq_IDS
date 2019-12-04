@@ -23,7 +23,7 @@
             v-for="item in matchingList"
             :key="item.id"
             :value="item.id"
-            :label="item.name+'  '+item.money"
+            :label="fnMatName(item.name)+'  '+item.money"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -92,6 +92,7 @@ export default {
   },
   data() {
     return {
+      dept: '',
       myUrl: `${comData.src}/static/files/GENERAL_RISK_DISCLOSURE.pdf`,
       matchingList: [],
       ap: "1",
@@ -145,9 +146,26 @@ export default {
   },
   mounted: function() {
     let vm = this;
+    if (!!window.localStorage.getItem("userInfo")) {
+      vm.dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
+    }
     vm.fnInit();
   },
   methods: {
+    fnMatName(data) {
+      let vm = this;
+      if (vm.dept == 21) {
+        if (data == "Deep AI Genius 2") {
+          return "Deep AI Genius A";
+        } else if (data == "Deep AI Genius 3") {
+          return "Deep AI Genius B";
+        } else {
+          return data;
+        }
+      } else {
+        return data;
+      }
+    },
     testType() {
       let vm = this;
       let dept = 11;

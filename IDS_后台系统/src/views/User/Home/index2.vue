@@ -146,13 +146,13 @@
             <div class="title line">{{ $t('home.user_info') }}</div>
             <div class="content userInfo-box">
               <div class="userInfo-img">
-                <img :src="userInfo.icon" alt />
+                <img :src="fnImgFilter(userInfo.icon)" alt />
               </div>
               <div class="line title1">IDS{{ userId }}</div>
               <p
                 style="padding-left: 10px; padding-right:5px;"
                 class="title2"
-              >{{ $t('home.congratulations') }}：{{ userInfo.levelName }}</p>
+              >{{ $t('home.congratulations') }}：{{ fnNameFilter(userInfo.levelName) }}</p>
             </div>
           </div>
         </el-col>
@@ -184,6 +184,7 @@ export default {
   inject: ["$main"],
   data() {
     return {
+      dept: '',
       userInfo: "", // 用户信息
       ben: "", // 个人资料
       ap: "",
@@ -200,9 +201,52 @@ export default {
     ProductList
   },
   mounted: function() {
-    this.fnInit();
+    let vm = this;
+    if (!!window.localStorage.getItem("userInfo")) {
+      vm.dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
+    }
+    vm.fnInit();
   },
   methods: {
+     // 名字过滤
+    fnNameFilter (data) {
+      let vm = this;
+      if(!!!data){
+        return '';
+      }
+      if(vm.dept == 21){
+        if(data == 'PIB'){
+          return 'PIB☆';
+        }else if(data == 'DIB'){
+          return 'PIB☆☆';
+        }else if(data == 'IIB'){
+          return 'PIB☆☆☆';
+        }else{
+          return data;
+        }
+      }else{
+        return data;
+      }
+    },
+    // 图片过滤
+    fnImgFilter(data) {
+      let vm = this;
+      if(!!!data){
+        return false;
+      }
+      if (vm.dept == 21) {
+        let arrs = data.split("/");
+        let type = arrs[arrs.length - 1];
+        let num = type.split(".")[0];
+        if(num == 3||num == 4||num == 5||num == 6||num == 7){
+          return `../../../../static/newImg/${num}.png`;
+        }else{
+          return data;
+        }
+      } else {
+        return data;
+      }
+    },
     testType() {
       let vm = this;
       let dept = 11;

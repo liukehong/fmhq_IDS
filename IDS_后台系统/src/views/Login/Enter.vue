@@ -337,6 +337,9 @@ export default {
                 JSON.stringify(res.data.token)
               ); // 保存token
               // 保存登录信息
+              if(res.data.dept == 31){
+                res.data.dept = 21;
+              }
               window.localStorage.setItem("userInfo", JSON.stringify(res.data));
               axios.defaults.headers.TOKEN = res.data.token; // 设置请求头
               vm.$router.push({ path: _url });

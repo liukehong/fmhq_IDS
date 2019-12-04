@@ -34,7 +34,7 @@
                 <h5 class="msg_title">{{ $t('lower_list.now') }}</h5>
                 <div class="my_msg_box">
                   <div class="my_img_box">
-                    <img :src="info.icon" alt />
+                    <img :src="fnImgFilter(info.icon)" alt />
                   </div>
                   <ul class="my_txt">
                     <li>
@@ -50,7 +50,7 @@
                     <li>
                       <!-- 会员等级 -->
                       <p>{{ $t('lower_list.member_level') }}</p>
-                      <p>{{ info.name }}</p>
+                      <p>{{ fnNameFilter(info.name) }}</p>
                     </li>
                     <li>
                       <!-- 个人业绩 -->
@@ -86,7 +86,7 @@
                     @click="fnGetData(item.userId)"
                   >
                     <i class="lower_img_box">
-                      <img :src="item.icon" alt />
+                      <img :src="fnImgFilter(item.icon)" alt />
                     </i>
                     <p class="lower_txt">{{ item.username }}</p>
                     <p class="lower_txt">ID:{{ item.userId }}</p>
@@ -103,13 +103,15 @@
 
   <script>
 import WatchScreen from "@/mixins/watchScreen.js";
+import MessageBox from "@/mixins/messageBox.js";
 export default {
   name: "lower_list",
-  mixins: [WatchScreen],
+  mixins: [WatchScreen, MessageBox],
   components: {},
   inject: ["$main"],
   data() {
     return {
+      dept: "",
       next: false,
       prevId: "",
       info: {
@@ -130,9 +132,51 @@ export default {
   },
   mounted: function() {
     let vm = this;
+    if (!!window.localStorage.getItem("userInfo")) {
+      vm.dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
+    }
     vm.fnGetData();
   },
   methods: {
+    // 名字过滤
+    fnNameFilter(data) {
+      let vm = this;
+      if (!!!data) {
+        return "";
+      }
+      if (vm.dept == 21) {
+        if (data == "PIB") {
+          return "PIB☆";
+        } else if (data == "DIB") {
+          return "PIB☆☆";
+        } else if (data == "IIB") {
+          return "PIB☆☆☆";
+        } else {
+          return data;
+        }
+      } else {
+        return data;
+      }
+    },
+    // 图片过滤
+    fnImgFilter(data) {
+      let vm = this;
+      if (!!!data) {
+        return false;
+      }
+      if (vm.dept == 21) {
+        let arrs = data.split("/");
+        let type = arrs[arrs.length - 1];
+        let num = type.split(".")[0];
+        if (num == 3 || num == 4 || num == 5 || num == 6 || num == 7) {
+          return `../../../../static/newImg/${num}.png`;
+        } else {
+          return data;
+        }
+      } else {
+        return data;
+      }
+    },
     // 返回上一级
     fnPrev() {
       let vm = this;
@@ -152,19 +196,21 @@ export default {
           user_id: id || ""
         })
         .then(res => {
-          (function() {
-            vm.next = false;
-            if (!!res.data.shang) {
-              if (res.data.shang.username != 0) {
-                if (res.data.shang.username != res.data.ben.userId) {
-                  vm.next = true;
-                  vm.prevId = res.data.shang.username;
+          vm.$main.loading = false;
+          if (res.code != 0) {
+            vm.fnOpenMessageBox(vm.$t(`errCode.${res.code}`), "error");
+          } else {
+            (function() {
+              vm.next = false;
+              if (!!res.data.shang) {
+                if (res.data.shang.username != 0) {
+                  if (res.data.shang.username != res.data.ben.userId) {
+                    vm.next = true;
+                    vm.prevId = res.data.shang.username;
+                  }
                 }
               }
-            }
-          })();
-          vm.$main.loading = false;
-          if (res.code == 0) {
+            })();
             // 本身信息
             let ben = res.data.ben;
             vm.info.username = ben.username;
