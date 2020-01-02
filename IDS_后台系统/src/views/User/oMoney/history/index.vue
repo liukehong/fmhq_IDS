@@ -26,11 +26,11 @@
                 <template slot-scope="scope">{{ WALLET_TYPE(scope.row.withdrawType) }}</template>
               </el-table-column>
               <!-- 提币币种 -->
-              <el-table-column prop :label="dept != 21?$t('withdraw_list.bankName'):$t('withdraw_list.bankName1')">
+              <el-table-column prop :label="dept == 11?$t('withdraw_list.bankName'):$t('withdraw_list.bankName1')">
                 <template slot-scope="scope">{{ scope.row.bankName }}</template>
               </el-table-column>
               <!-- 卡号/地址 -->
-              <el-table-column :label="dept != 21?$t('withdraw_list.bankAndCoinType'):$t('personal_profile.address')">
+              <el-table-column :label="dept == 11?$t('withdraw_list.bankAndCoinType'):$t('personal_profile.address')">
                 <template slot-scope="scope">{{ scope.row.bankNumber }}</template>
               </el-table-column>
               <!-- 金额 -->
@@ -85,7 +85,7 @@ export default {
   inject: ["$main"],
   data() {
     return {
-      dept: 11,
+      dept: '',
       sizeList: [10, 15, 20, 25, 30],
       currentPage: 1,
       tableData: [],

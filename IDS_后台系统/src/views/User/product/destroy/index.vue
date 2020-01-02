@@ -108,13 +108,14 @@ export default {
   methods: {
     fnMatName(data) {
       let vm = this;
-      if (vm.dept == 21) {
+      if (vm.dept != 11) {
         if (data == "Deep AI Genius 2") {
           return "Deep AI Genius A";
         } else if (data == "Deep AI Genius 3") {
           return "Deep AI Genius B";
         } else {
-          return data;
+          // return data;
+          return "Deep AI Genius A";
         }
       } else {
         return data;

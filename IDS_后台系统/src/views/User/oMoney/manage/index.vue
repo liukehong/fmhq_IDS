@@ -213,11 +213,11 @@ export default {
     let vm = this;
     vm.fnTypeList();
     vm.fnGetRate();
-    let dept = 11;
+    let dept;
     if (!!window.localStorage.getItem("userInfo")) {
       dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
     }
-    if (comData.os_type == 2 && dept == 21) {
+    if (comData.os_type == 2 && dept != 11) {
       // 去掉电子钱包
       vm.currencyList = [
         {
@@ -236,11 +236,11 @@ export default {
     // 根据dept配置不同的选项
     fnTypeList() {
       let vm = this;
-      let dept = 11;
+      let dept;
       if (!!window.localStorage.getItem("userInfo")) {
         dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
       }
-      if (dept == 21) {
+      if (dept != 11) {
         vm.options = [
           {
             value: 1,

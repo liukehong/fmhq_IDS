@@ -21,7 +21,7 @@
                   :xl="24"
                 >
                   <div class="meal_icon">
-                    <img :src="ben.mt4Icon?ben.mt4Icon:''" alt />
+                    <img :src="mt4Logo?mt4Logo:''" alt />
                   </div>
                   <div class="meal_div">
                     <!-- 配置列表 -->
@@ -210,7 +210,7 @@
             <div class="content mime-box">
               <div class="my_msg_box">
                 <div class="my_img_box">
-                  <img :src="ben.mt4Icon?ben.mt4Icon:''" alt />
+                  <img :src="mt4Logo?mt4Logo:''" alt />
                 </div>
                 <ul class="my_txt">
                   <!-- 用户名 -->
@@ -240,11 +240,6 @@
                   </li>
                 </ul>
               </div>
-              <div class="content-bottom" v-if="false">
-                <div class="bottom-img">
-                  <img :src="ben.mt4Icon?ben.mt4Icon:''" alt />
-                </div>
-              </div>
             </div>
           </div>
         </el-col>
@@ -264,6 +259,7 @@ export default {
   inject: ["$main"],
   data() {
     return {
+      mt4Logo: "",
       dept: "",
       userInfo: "", // 用户信息
       ben: "", // 个人资料
@@ -287,38 +283,38 @@ export default {
   },
   methods: {
     // 名字过滤
-    fnNameFilter (data) {
+    fnNameFilter(data) {
       let vm = this;
-      if(!!!data){
-        return '';
+      if (!!!data) {
+        return "";
       }
-      if(vm.dept == 21){
-        if(data == 'PIB'){
-          return 'PIB☆';
-        }else if(data == 'DIB'){
-          return 'PIB☆☆';
-        }else if(data == 'IIB'){
-          return 'PIB☆☆☆';
-        }else{
+      if (vm.dept != 11) {
+        if (data == "PIB") {
+          return "PIB☆";
+        } else if (data == "DIB") {
+          return "PIB☆☆";
+        } else if (data == "IIB") {
+          return "PIB☆☆☆";
+        } else {
           return data;
         }
-      }else{
+      } else {
         return data;
       }
     },
     // 图片过滤
     fnImgFilter(data) {
       let vm = this;
-      if(!!!data){
+      if (!!!data) {
         return false;
       }
-      if (vm.dept == 21) {
+      if (vm.dept != 11) {
         let arrs = data.split("/");
         let type = arrs[arrs.length - 1];
         let num = type.split(".")[0];
-        if(num == 3||num == 4||num == 5||num == 6||num == 7){
+        if (num == 3 || num == 4 || num == 5 || num == 6 || num == 7) {
           return `../../../../static/newImg/${num}.png`;
-        }else{
+        } else {
           return data;
         }
       } else {
@@ -344,10 +340,26 @@ export default {
       vm.$main.loading = true;
       vm.$api.IBM_HOME_PERSONALASSETS().then(res => {
         vm.prevTime = res.data.date;
+        // 配套图片 mt4Logo
+        if (vm.dept != 11) {
+          if (res.data.mt4.name == "Deep AI Genius 2") {
+            vm.mt4Logo = "../../../../../static/image/A.png";
+          }
+          if (res.data.mt4.name == "Deep AI Genius 3") {
+            vm.mt4Logo = "../../../../../static/image/B.png";
+          }
+          if (res.data.mt4.name == "Deep AI Genius 1") {
+            vm.mt4Logo = "../../../../../static/image/A.png";
+          }
+        }else{
+          vm.mt4Logo = res.data.mt4.icon;
+        }
+
         vm.$main.loading = false;
       });
       // 获取个人资料
       vm.$api.IBM_HOME_TJT().then(res => {
+        console.log(res, 22334);
         vm.ben = res.data.ben;
         // vm.$main.loading = false;
       });

@@ -16,7 +16,9 @@
       </el-table-column>
       <el-table-column prop="id" label="ID"></el-table-column>
       <!-- 配套名 -->
-      <el-table-column :label="$t('product_setting.mat_name')" prop="matName"></el-table-column>
+      <el-table-column :label="$t('product_setting.mat_name')" prop="matName">
+        <template slot-scope="scope">{{ fnMatName(scope.row.matName) }}</template>
+      </el-table-column>
       <!-- 配套金额 -->
       <el-table-column prop="money" :label="$t('product_setting.mat_money')"></el-table-column>
       <!-- 预期回报率 -->
@@ -72,6 +74,7 @@ export default {
   mixins: [WatchScreen],
   data() {
     return {
+      dept: '',
       sizeList: [10, 15, 20, 25, 30],
       loading: false,
       currentPage: 1,
@@ -87,9 +90,28 @@ export default {
   },
   mounted: function() {
     let vm = this;
+    if (!!window.localStorage.getItem("userInfo")) {
+      vm.dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
+    }
     vm.fnGetData();
   },
   methods: {
+    fnMatName (data) {
+      let vm = this;
+      console.log(data,22);
+      if(vm.dept != 11){
+        if(data == 'Deep AI Genius 2'){
+          return 'Deep AI Genius A';
+        }else if(data == 'Deep AI Genius 3'){
+          return 'Deep AI Genius B';
+        }else{
+          // return data
+          return 'Deep AI Genius A';
+        }
+      }else{
+        return data;
+      }
+    },
     // 每页要展示多少条
     fnSizeChange(val) {
       let vm = this;

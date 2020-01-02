@@ -145,11 +145,11 @@ export default {
   methods: {
     testType() {
       let vm = this;
-      let dept = 11;
+      let dept;
       if (!!window.localStorage.getItem("userInfo")) {
         dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
       }
-      if(dept == 21&&comData.os_type == 2){
+      if(dept != 11&&comData.os_type == 2){
         return false;
       }else{
         return true;

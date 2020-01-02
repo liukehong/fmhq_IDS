@@ -307,9 +307,9 @@ export default {
                 JSON.stringify(res.data.token)
               ); // 保存token
               // 保存登录信息
-              if(res.data.dept == 31){
+              /* if(res.data.dept == 31||res.data.dept == 41||res.data.dept == 51||res.data.dept == 61){
                 res.data.dept = 21;
-              }
+              } */
               window.localStorage.setItem("userInfo", JSON.stringify(res.data));
               axios.defaults.headers.TOKEN = res.data.token; // 设置请求头
               let _url = comData.conutry_type + "/user/account/payPassword"; // 登录之后的跳转页面地址

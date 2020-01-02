@@ -64,7 +64,7 @@
                 <!-- 当前手机号 -->
                 <!-- <el-form-item :label="$t('phone_manage.now_manage')">
                   <div>{{ ruleForm.mobile }}</div>
-                </el-form-item> -->
+                </el-form-item>-->
                 <!-- 验证码 -->
                 <!-- <el-form-item :label="$t('transaction_pass.code')" prop="phoneCord">
                   <el-input :placeholder="$t('transaction_pass.code')" v-model="ruleForm.phoneCord">
@@ -72,7 +72,7 @@
                       <GetCode apiUrl="IBM_UTILS_MOBILECODE" :mobile="ruleForm.mobile"></GetCode>
                     </template>
                   </el-input>
-                </el-form-item> -->
+                </el-form-item>-->
                 <!-- 提交 -->
                 <el-form-item>
                   <el-button
@@ -121,7 +121,7 @@ export default {
             message: "asset_allocation.allocationErrInfo.transfer_money",
             trigger: "blur"
           } // 请先输入金额
-        ],
+        ]
         /* phoneCord: [
           {
             required: true,
@@ -158,12 +158,12 @@ export default {
   computed: {},
   mounted: function() {
     let vm = this;
-    let dept = 11;
+    let dept;
     if (!!window.localStorage.getItem("userInfo")) {
       dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
     }
     // 阉割版并且dept 为21 时候 去掉电子钱包
-    if(comData.os_type == 2&&dept == 21){
+    if (comData.os_type == 2 && dept != 11) {
       vm.walletTypeList = [
         {
           type: "rp",
@@ -176,7 +176,7 @@ export default {
           name: this.$t("wallet.cash"), // 1 现金钱包
           money: "",
           icon: "el-icon-wallet"
-        },
+        }
       ];
     }
     vm.fnInit();

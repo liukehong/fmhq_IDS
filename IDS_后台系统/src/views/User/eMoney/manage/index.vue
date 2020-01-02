@@ -66,7 +66,7 @@
                 class="item_form"
               >
                 <!-- dept==21  currency==usdt -->
-                <el-form-item :label="$t('other.text1')+'：'" v-if="dept == 21&&currency == 'usdt'">
+                <el-form-item :label="$t('other.text1')+'：'" v-if="dept != 11&&currency == 'usdt'">
                   <!-- 支付通道 -->
                   <el-select v-model="payType" :placeholder="$t('select.placeholder')">
                     <el-option :label="$t('other.text2')" :value="1"></el-option>
@@ -150,7 +150,7 @@ export default {
       return this.value * (1 + 0.01);
     },
     coin_val: function() {
-      if (this.dept == 21 && this.currency == "usdt" && this.payType == 2) {
+      if (this.dept != 11 && this.currency == "usdt" && this.payType == 2) {
         return floatNumber.multiply(this.value * (1 + 0.01), this.usd_rate, 4);
       } else {
         return floatNumber.multiply(this.value * (1 + 0.01), 1 / this.rate, 4);
@@ -160,7 +160,7 @@ export default {
       let vm = this;
       let val = vm.currency.toUpperCase();
       // vm.dept == 21 && vm.currency == "usdt" && vm.payType == 2
-      if (this.dept == 21 && vm.currency == "usdt" && vm.payType == 2) {
+      if (this.dept != 11 && vm.currency == "usdt" && vm.payType == 2) {
         return vm.$t("recharge.need_pay") + " " + "CNY" + "：";
       } else {
         return vm.$t("recharge.need_pay") + " " + val + "：";
@@ -251,7 +251,7 @@ export default {
       let vm = this;
       // $t('recharge.input_num')+'：'
       // dept == 21&&currency == 'usdt'
-      if (vm.dept == 21 && vm.currency == "usdt") {
+      if (vm.dept != 11 && vm.currency == "usdt") {
         // return vm.$t('recharge.input_num1');
         return vm.$t("recharge.input_num");
       } else {
@@ -331,7 +331,7 @@ export default {
       let params;
       let pathName;
       let flag;
-      if (vm.dept == 21 && vm.currency == "usdt" && vm.payType == 2) {
+      if (vm.dept != 11 && vm.currency == "usdt" && vm.payType == 2) {
         pathName = "IDS_NEWTRA_MAT";
         params = {
           // orderAmount: vm.coin_val,

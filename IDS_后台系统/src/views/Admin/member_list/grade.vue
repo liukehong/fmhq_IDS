@@ -42,6 +42,7 @@ export default {
   inject: ["p", "$main"],
   data() {
     return {
+      dept: '',
       user: {
         levelName: "" // 等级名称
       },
@@ -49,12 +50,41 @@ export default {
         levelId: "" // 等级ID
       },
       rules: {},
-      gradeList: []
+      gradeList: [],
+      list: [
+        {
+          id: 0,
+          name: 'MEMBER'
+        },
+        {
+          id: 3,
+          name: 'MIB'
+        },
+        {
+          id: 4,
+          name: 'SIB'
+        },
+        {
+          id: 5,
+          name: 'PIB☆'
+        },
+        {
+          id: 6,
+          name: 'PIB☆☆'
+        },
+        {
+          id: 7,
+          name: 'PIB☆☆☆'
+        }
+      ]
     };
   },
   components: {},
   mounted: function() {
     let vm = this;
+    if (!!window.localStorage.getItem("userInfo")) {
+      vm.dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
+    }
     vm.fnGetGradeList();
     // vm.fnInit();
   },
@@ -85,7 +115,12 @@ export default {
     fnGetGradeList() {
       let vm = this;
       vm.$api.IBM_ADMIN_LEVELINFO().then(res => {
-        vm.gradeList = res.data;
+        console.log(res.data,2233);
+        if(vm.dept != 11){
+          vm.gradeList = vm.list;
+        }else{
+          vm.gradeList = res.data;
+        }
         vm.fnInit();
       });
     },

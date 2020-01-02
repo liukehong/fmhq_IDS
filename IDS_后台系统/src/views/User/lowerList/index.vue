@@ -144,7 +144,7 @@ export default {
       if (!!!data) {
         return "";
       }
-      if (vm.dept == 21) {
+      if (vm.dept != 11) {
         if (data == "PIB") {
           return "PIB☆";
         } else if (data == "DIB") {
@@ -164,7 +164,7 @@ export default {
       if (!!!data) {
         return false;
       }
-      if (vm.dept == 21) {
+      if (vm.dept != 11) {
         let arrs = data.split("/");
         let type = arrs[arrs.length - 1];
         let num = type.split(".")[0];

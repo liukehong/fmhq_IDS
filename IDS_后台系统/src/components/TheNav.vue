@@ -22,7 +22,11 @@
       >
         <template v-for="item1 in menuList">
           <!-- 只有一级菜单 -->
-          <el-menu-item v-if="isShowThree1(item1.haschildren,item1.index)" :index="item1.index" :key="item1.index">
+          <el-menu-item
+            v-if="isShowThree1(item1.haschildren,item1.index)"
+            :index="item1.index"
+            :key="item1.index"
+          >
             <div v-if="item1.index != 'admin_feedback'">
               <i :class="item1.icon"></i>
               <span slot="title">{{ item1.name }}</span>
@@ -91,7 +95,7 @@ export default {
   inject: ["$main"],
   data: function() {
     return {
-      dept: 11, // 11什么都不变  21改变
+      dept: "", // 11什么都不变  21改变
       num: 0,
       user: {
         username: "", // 用户名
@@ -111,58 +115,112 @@ export default {
 
     this.initMenuList();
     this.$main.fnGetNewsNum();
-    // this.fnGetNews();
-    // this.fnInit();
   },
   methods: {
-    isShowThree1 (haschildren, index) {
-      if(!!!haschildren){
-        if(comData.os_type == 1){
+    isShowThree1(haschildren, index) {
+      if (!!!haschildren) {
+        if (comData.os_type == 1) {
           return true;
-        }else{
-          if(this.dept == 21){
-            if(index == '/user/lowerList'){
+        } else {
+          if (this.dept != 11) {
+            if (index == "/user/lowerList") {
               return false;
-            }else{
+            } else {
               return true;
             }
-          }else{
+          } else {
             return true;
           }
         }
-      }else{
+      } else {
         return false;
       }
     },
     isShowThree(haschildren, index) {
+      if (index == "/user/account/asset") {
+      }
       // 21 的时候  不要银行卡、转账
       if (!!!haschildren) {
-        if (this.dept == 21) {
+        if (this.dept != 11) {
+          if (this.dept == 51) {
+            if (comData.os_type == 1) {
+              // 正式版
+              // 银行卡、转账
+              if (
+                index == "/user/account/bank" ||
+                index == "/user/account/asset"
+              ) {
+                return false;
+              } else {
+                return true;
+              }
+            } else {
+              // 阉割版
+              // 银行卡、转账、电子钱包
+              if (
+                index == "/user/account/bank" ||
+                index == "/user/wallet/ele" ||
+                index == "/user/account/asset"
+              ) {
+                return false;
+              } else {
+                return true;
+              }
+            }
+          } else {
+            if (comData.os_type == 1) {
+              // 正式版
+              // 银行卡、转账
+              if (
+                index == "/user/account/bank" ||
+                index == "/user/account/asset"
+              ) {
+                return false;
+              } else {
+                return true;
+              }
+            } else {
+              // 阉割版
+              // 银行卡、转账、电子钱包
+              if (
+                index == "/user/account/bank" ||
+                index == "/user/account/asset" ||
+                index == "/user/wallet/ele"
+              ) {
+                return false;
+              } else {
+                return true;
+              }
+            }
+          }
+        } else {
+          return true;
+        }
+
+        /* if (this.dept != 11) {
           if (comData.os_type == 1) {
             // 正式版
             // 银行卡、转账
-            if(index == '/user/account/bank'||index == '/user/account/asset'){
+            if (
+              index == "/user/account/bank" ||
+              index == "/user/account/asset"
+            ) {
               return false;
-            }else{
+            } else {
               return true;
             }
           } else {
             // 阉割版
             // 银行卡、转账、电子钱包
-            if(index == '/user/account/bank'||index == '/user/account/asset'||index == '/user/wallet/ele'){
+            if (
+              index == "/user/account/bank" ||
+              index == "/user/account/asset" ||
+              index == "/user/wallet/ele"
+            ) {
               return false;
-            }else{
+            } else {
               return true;
             }
-          }
-        }else{
-          return true;
-        }
-        /* if (this.dept == 21) {
-          if(index == '/user/account/bank'||index == '/user/account/asset'){
-            return false;
-          }else{
-            return true;
           }
         } else {
           return true;
@@ -171,27 +229,6 @@ export default {
         return false;
       }
     },
-    // 获取未读数量
-    /* fnGetNews() {
-      let vm = this;
-      if (vm.$route.matched[0].name == "admin") {
-        // 管理员端
-        vm.$api.IDS_ADMIN_SELECTCOUNT().then(res => {
-          console.log(res, 22);
-          if (res.code == 0) {
-            vm.num = res.data ? parseInt(res.data) : 0;
-          }
-        });
-      } else {
-        // 用户端
-        vm.$api.IDS_FEEDBACK_SELECTCOUNT().then(res => {
-          console.log(res);
-          if (res.code == 0) {
-            vm.num = res.data ? parseInt(res.data) : 0;
-          }
-        });
-      }
-    }, */
     handleSelect(index, indexPath) {
       let vm = this;
       let w = document.documentElement.offsetWidth || document.body.offsetWidth;
@@ -212,21 +249,12 @@ export default {
       }
       this.menuList = comData.menuList(num, this);
     }
-    /* fnInit () {
-      let vm = this;
-      // 获取用户信息
-      vm.fnGetNewInfo().then(res=>{
-        vm.user.userId = res.userId;
-        vm.user.username = res.username;
-      })
-    } */
   },
   watch: {
     $route(to, from) {
       let active = to.path;
       this.default_active = active;
       if (to.matched[0].name != from.matched[0].name) {
-        // this.fnGetNews();
         this.$main.fnGetNewsNum();
         this.initMenuList();
       }

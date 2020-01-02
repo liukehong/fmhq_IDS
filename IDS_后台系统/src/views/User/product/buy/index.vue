@@ -124,15 +124,17 @@ export default {
     vm.fnTypeList();
   },
   methods: {
-    changeName (data) {
+    changeName(data) {
       let vm = this;
-      if(vm.dept == 21){
-        if(data == 'Deep AI Genius 2'){
-          return 'Deep AI Genius A';
-        }else{
-          return 'Deep AI Genius B';
+      if (vm.dept != 11) {
+        if (data == "Deep AI Genius 2") {
+          return "Deep AI Genius A";
+        } else if (data == "Deep AI Genius 3") {
+          return "Deep AI Genius B";
+        } else {
+          return "Deep AI Genius A";
         }
-      }else{
+      } else {
         return data;
       }
     },
@@ -156,7 +158,7 @@ export default {
               if (item.name == jtem.name) {
                 item.list.push(jtem);
                 if (!!!item.icon) {
-                  if (vm.dept == 21) {
+                  if (vm.dept != 11) {
                     if (item.name == "Deep AI Genius 2") {
                       item.icon = "../../../../../static/image/A.png";
                       // item.name = "Deep AI Genius A";
@@ -164,6 +166,10 @@ export default {
                     if (item.name == "Deep AI Genius 3") {
                       item.icon = "../../../../../static/image/B.png";
                       // item.name = "Deep AI Genius B";
+                    }
+                    if (item.name == "Deep AI Genius 1") {
+                      item.icon = "../../../../../static/image/A.png";
+                      // item.name = "Deep AI Genius A";
                     }
                   } else {
                     item.icon = jtem.icon;

@@ -10,7 +10,7 @@
     >
       <!-- 当前配套 -->
       <el-form-item :label="$t('product_upgrade.now_product')">
-        <div>{{ p.item.money == 0?'-':'IBM'+ p.item.money}}</div>
+        <div>{{ p.item.money == 0?'-':'IDS'+ p.item.money}}</div>
       </el-form-item>
       <!-- 配套选择 -->
       <el-form-item :label="$t('new_members.product')">
@@ -154,13 +154,14 @@ export default {
   methods: {
     fnMatName(data) {
       let vm = this;
-      if (vm.dept == 21) {
+      if (vm.dept != 11) {
         if (data == "Deep AI Genius 2") {
           return "Deep AI Genius A";
         } else if (data == "Deep AI Genius 3") {
           return "Deep AI Genius B";
         } else {
-          return data;
+          // return data;
+          return "Deep AI Genius A";
         }
       } else {
         return data;
@@ -168,11 +169,11 @@ export default {
     },
     testType() {
       let vm = this;
-      let dept = 11;
+      let dept;
       if (!!window.localStorage.getItem("userInfo")) {
         dept = JSON.parse(window.localStorage.getItem("userInfo")).dept;
       }
-      if(dept == 21&&comData.os_type == 2){
+      if(dept != 11&&comData.os_type == 2){
         return false;
       }else{
         return true;
